@@ -1,0 +1,45 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Trang Chủ {% endblock %}
+
+{% block content %}
+<br>
+
+{% if products %}
+<!-- Nếu có sản phẩm -->
+<div class="row">
+    {% for p in products %}
+    <!-- Vòng lặp qua từng sản phẩm để hiển thị -->
+    <div class="col-md-3 col-xs-12" style="padding: 10px;">
+        <div class="card">
+            <!-- Hiển thị hình ảnh sản phẩm và thông tin cơ bản -->
+            <img class="card-img-top" src="{{ url_for('static', filename=p.image) }}" alt="{{ p.name }}">
+            <div class="card-body">
+                <h4 class="card-title">{{ p.name }}</h4>
+                <p class="card-text">{{ "{:,.0f}".format(p.price) }} ₫</p>
+                <!-- Liên kết đến trang chi tiết sản phẩm và nút đặt hàng -->
+                <a href="{{ url_for('product_detail', product_id = p.id) }}" class="btn btn-info">Chi tiết</a>
+                <a href="#" class="btn btn-primary"
+                    onclick="addToCart('{{ p.id }}', '{{ p.name }}', '{{ p.price }}')">Đặt hàng</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<!-- Nếu không có sản phẩm -->
+<p><i>Không có sản phẩm nào!!!</i></p>
+{% endif %}
+
+{% if pages > 1 %}
+<!-- Hiển thị phân trang nếu có nhiều hơn một trang -->
+<ul class="pagination">
+    {% for idx in range(1, pages + 1) %}
+    <li class="page-item">
+        <a class="page-link" href="{{ url_for('home', page=idx) }}">{{ idx }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<br><br>
+{% endblock %}

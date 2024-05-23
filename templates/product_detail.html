@@ -1,0 +1,80 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Chi tiết sản phẩm {% endblock %}
+
+{% block content %}
+<br>
+<div class="row">
+    <!-- Hiển thị hình ảnh sản phẩm -->
+    <div class="col-md-5 col-xs-12">
+        <img src="{{ url_for('static', filename=product.image) }}" width="200" alt="{{ product.name }}">
+    </div>
+    <!-- Hiển thị thông tin chi tiết sản phẩm -->
+    <div class="col-md-7 col-xs-12">
+        <h2>{{ product.name }}</h2>
+        <p>{{ product.description }}</p>
+        <h4>{{ "{:,.0f}".format(product.price) }} ₫</h4>
+    </div>
+</div>
+<hr>
+
+<!-- Kiểm tra người dùng đã đăng nhập chưa để hiển thị ô nhập bình luận -->
+{% if current_user.is_authenticated %}
+<div>
+    <div class="form-group">
+        <textarea class="form-control" id="commentId" placeholder="Nhập bình luận..."></textarea>
+    </div>
+    <input type="button" onclick="addComment('{{ product.id }}')" class="btn btn-primary" value="Bình luận">
+</div>
+{% else %}
+<!-- Hiển thị liên kết đến trang đăng nhập nếu chưa đăng nhập -->
+<a href="{{ url_for('user_signin') }}">Đăng nhập để bình luận!!!</a>
+{% endif %}
+
+<br><br>
+<!-- Hiển thị khu vực bình luận -->
+<div id="commentArea">
+    {% for c in comments %}
+    <div class="row">
+        <div class="col-md-1 col-xs-4">
+            <!-- Hiển thị hình đại diện người bình luận -->
+            {% if c.user.avatar and c.user.avatar and c.user.avatar.startswith('https') %}
+            <img src="{{ current_user.avatar }}" class="rounded-circle" width="65px" height="65px"
+                alt="{{ current_user.name }}">
+            {% else %}
+            <!-- Nếu không có hình đại diện, sử dụng hình mặc định -->
+            <img src="{{ url_for('static', filename='images/avatar.png') }}" class="rounded-circle" width="65px"
+                alt="{{ current_user.name }}">
+            {% endif %}
+        </div>
+        <div class="col-md-11 col-xs-8">
+            <!-- Hiển thị nội dung và thời gian bình luận -->
+            <p>{{ c.content }}</p>
+            <p><em class="my-date">{{ c.create_date }}</em></p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Hiển thị phân trang nếu có nhiều trang bình luận -->
+{% if pages > 1 %}
+<ul class="pagination">
+    {% for idx in range(1, pages + 1) %}
+    <li class="page-item">
+        <a class="page-link" href="{{ url_for('product_detail', product_id=product.id, page=idx) }}">{{ idx }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<!-- Script để hiển thị thời gian bình luận theo định dạng 'từ bây giờ' -->
+<script>
+    window.onload = function () {
+        let d = document.getElementsByClassName('my-date');
+        for (let i = 0; i < d.length; i++) {
+            d[i].innerText = moment(d[i].innerText).locale('vi').fromNow();
+        }
+    }
+</script>
+
+{% endblock %}

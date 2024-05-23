@@ -1,0 +1,41 @@
+{% extends 'admin/base.html' %}
+
+{% block body %}
+
+{% if current_user.is_authenticated %}
+<!-- Hiển thị chào mừng khi người dùng đã đăng nhập -->
+<h1>WELCOME {{ current_user.name }} TO ADMINISTRATION WEBSITE</h1>
+
+<!-- Bảng thống kê danh mục sản phẩm -->
+<table class="table">
+    <tr>
+        <th>Mã danh mục</th>
+        <th>Tên danh mục</th>
+        <th>Số lượng sản phẩm</th>
+    </tr>
+    {% for s in stats %}
+    <tr>
+        <td>{{ s[0] }}</td>
+        <td>{{ s[1] }}</td>
+        <td>{{ s[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% else %}
+<!-- Form đăng nhập cho quản trị viên -->
+<h1 class="text-center text-info">ĐĂNG NHẬP QUẢN TRỊ VIÊN</h1>
+<form method="post" action="{{ url_for('admin_signin') }}">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" placeholder="Nhập username..." required>
+    </div>
+    <div class="form-group">
+        <label for="pass">Mật khẩu</label>
+        <input type="password" class="form-control" id="pass" name="password" placeholder="Nhập password..." required>
+    </div>
+    <input type="submit" value="Đăng nhập" class="btn btn-info">
+</form>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'layout/base.html' %}
+
+{% block title %} Đăng nhập người dùng {% endblock %}
+
+{% block content %}
+<br>
+<h1 class="text-center text-info">ĐĂNG NHẬP NGƯỜI DÙNG</h1>
+
+{% if err_msg %}
+<!-- Hiển thị thông báo lỗi nếu có -->
+<div class="alert alert-danger">
+    <h4>{{ err_msg }}</h4>
+</div>
+{% endif %}
+
+<!-- Form đăng nhập -->
+<form method="post">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <!-- Ô nhập username -->
+        <input type="text" class="form-control" id="username" name="username" placeholder="Nhập username..." required>
+    </div>
+    <div class="form-group">
+        <label for="pass">Mật khẩu</label>
+        <!-- Ô nhập mật khẩu -->
+        <input type="password" class="form-control" id="pass" name="password" placeholder="Nhập password..." required>
+    </div>
+    <!-- Nút đăng nhập và liên kết tạo tài khoản -->
+    <input type="submit" value="Đăng nhập" class="btn btn-info">
+    <a href="{{ url_for('user_register', next='cart') }}">Tạo tài khoản</a>
+</form>
+<br><br>
+{% endblock %}
